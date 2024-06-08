@@ -13,83 +13,30 @@ public class LoginPage {
         element = new Element(driver);
     }
 
-    public LoginPage enterUserId(String userId) {
-        element.type(By.name("userid"), userId);
+    public LoginPage enterUserName(String userName) {
+        element.type(By.name("userid"), userName);
         return this;
-
     }
 
-    public LoginPage enterUserPassword(String password) {
+    public LoginPage enterPassword(String password) {
         element.type(By.name("passid"), password);
         return this;
     }
 
-    public LoginPage enterUserName(String username) {
-        element.type(By.name("username"), username);
+    public LoginPage enterRepeatPassword(String repeatedPassword) {
+        element.type(By.name("repeatpassid"), repeatedPassword);
         return this;
     }
 
-    public LoginPage enterUserAddress(String address) {
-        element.type(By.name("address"), address);
-        return this;
-    }
-
-    public LoginPage selectUserCountry(String country) {
-        element.selectOptionWithVisibleText(By.name("country"), country);
-        return this;
-    }
-
-    public LoginPage enterZipCode(String zipCode) {
-        element.type(By.name("zip"), zipCode);
-        return this;
-    }
-
-    public LoginPage enterUserEmail(String email) {
-        element.type(By.name("email"), email);
-        return this;
-    }
-
-    public LoginPage selectEnglishLanguage() {
-        if (!element.getElementAttribute(By.cssSelector("input[name='languageQuestion']"), "checked").equalsIgnoreCase("true")) {
-            element.click(By.cssSelector("input[name='languageQuestion']"));
-        }
-        return this;
-    }
-
-    public LoginPage deSelectEnglishLanguage() {
-        if (element.getElementAttribute(By.cssSelector("input[name='languageQuestion']"), "checked").equalsIgnoreCase("true")) {
-            element.click(By.cssSelector("input[name='languageQuestion']"));
-        }
-        return this;
-    }
-
-    public LoginPage fillAboutSection(String text) {
-        element.type(By.id("desc"), text);
-        return this;
-    }
-
-    public LoginPage selectSex(Gender gender) {
-        switch (gender) {
-            case MALE:
-                element.click(By.cssSelector("input[value='Male']"));
-                break;
-            case FEMALE:
-                element.click(By.cssSelector("input[value='Female']"));
-                break;
-        }
-        return this;
-    }
-
-    public void clickSubmit() {
+    public LoginPage clickLoginButton() {
         element.click(By.name("submit"));
+        return this;
     }
 
-    public boolean isRegistrationFormDisplayed() {
-
-        return element.isDisplayed(By.name("registration"));
+    public boolean isUserLoggedInSuccessfully() {
+        boolean value = element.getAlertText().equalsIgnoreCase("Succesful login!");
+        element.acceptAlert();
+        return value;
     }
 
-    public enum Gender {
-        MALE, FEMALE
-    }
 }

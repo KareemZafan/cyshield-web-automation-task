@@ -21,4 +21,9 @@ public class JSONFileManager {
     public Object getObject(String jsonPath) throws IOException {
         return readContext.read(jsonPath);
     }
+
+    public String getStringObject(String jsonPath) {
+        return readContext.read(jsonPath).toString();
+    }
+
 }

@@ -1,7 +1,9 @@
 package element_actions;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -10,14 +12,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class Element {
-    private WebDriver driver;
-    private WebDriverWait wait;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
     Actions actions;
+    JavascriptExecutor javascriptExecutor;
 
     public Element(WebDriver driver) {
         this.driver = driver;
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         actions = new Actions(driver);
+        javascriptExecutor = (JavascriptExecutor) driver;
     }
 
     public String getElementText(By locator) {
@@ -58,19 +62,55 @@ public class Element {
 
     public Element clear(By locator) {
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(locator)));
-         driver.findElement(locator).clear();
-         return this;
+        driver.findElement(locator).clear();
+        return this;
     }
 
-    public Element clickAndHold(By locator){
+    public Element clickAndHold(By locator) {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
         actions.clickAndHold(driver.findElement(locator)).perform();
         return this;
     }
 
-    public boolean isSelected(By locator){
+    public Element scrollToElement(By locator) {
+        WebElement element = driver.findElement(locator);
+        wait.until(ExpectedConditions.visibilityOf(element));
+        javascriptExecutor.executeScript("arguments[0].scrollIntoView();", element);
+        return this;
+    }
+
+    public Element scrollBy(int start, int end) {
+        javascriptExecutor.executeScript(String.format("window.scrollBy(%d,%d)", start, end));
+        return this;
+    }
+
+    public Element scrollToEnd() {
+        javascriptExecutor.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+        return this;
+    }
+
+    public boolean isSelected(By locator) {
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(locator)));
-        return  driver.findElement(locator).isSelected();
+        return driver.findElement(locator).isSelected();
+    }
+
+    public boolean isDisplayed(By locator) {
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(locator)));
+        return driver.findElement(locator).isDisplayed();
+    }
+
+    public Element acceptAlert() {
+        wait.until(ExpectedConditions.alertIsPresent()).accept();
+        return this;
+    }
+
+    public Element dismissAlert() {
+        wait.until(ExpectedConditions.alertIsPresent()).dismiss();
+        return this;
+    }
+
+    public String getAlertText() {
+       return wait.until(ExpectedConditions.alertIsPresent()).getText();
     }
 
     public boolean dropDownOptionIsSelected(By locator, String optionText) {
@@ -79,7 +119,4 @@ public class Element {
         return select.getAllSelectedOptions().contains(optionText);
 
     }
-
-
-
 }

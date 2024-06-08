@@ -1,20 +1,29 @@
 package pages;
 
+import element_actions.Element;
+import io.PropertiesFileManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class HomePage {
-    private WebDriver driver;
+    private final WebDriver driver;
+    private final PropertiesFileManager props;
+    private final Element element;
+
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
+        element = new Element(driver);
+        props = new PropertiesFileManager("src/main/resources/app-utils");
     }
 
-    public void open() {
-        driver.get("https://automationexercise.com/");
+    public HomePage open() {
+        driver.get(props.getProperty("URL"));
+        return this;
     }
 
-    public void navigateTo(String title){
-        driver.findElement(By.partialLinkText(title)).click();
+    public HomePage navigateTo(String title) {
+        element.click(By.partialLinkText(title));
+        return this;
     }
 }

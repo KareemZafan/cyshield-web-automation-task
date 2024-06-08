@@ -8,8 +8,11 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class DriverFactory {
     private static ThreadLocal<WebDriver> drivers = new ThreadLocal<>();
 
-    public static WebDriver getDriver(BrowserType browserType) {
+    public WebDriver getDriver() {
+        return drivers.get();
+    }
 
+    public void setDriver(BrowserType browserType) {
         switch (browserType) {
             case CHROME:
                 drivers.set(new ChromeDriver());
@@ -20,14 +23,17 @@ public class DriverFactory {
             case EDGE:
                 drivers.set(new EdgeDriver());
                 break;
+            default:
+                throw new IllegalArgumentException("Unsupported Browser!");
         }
-        return drivers.get();
     }
 
-    public enum BrowserType{
-        CHROME,
-        FIREFOX,
-        EDGE
+    public ThreadLocal<WebDriver> getDrivers() {
+        return drivers;
+    }
+
+    public enum BrowserType {
+        CHROME, FIREFOX, EDGE
     }
 
 }

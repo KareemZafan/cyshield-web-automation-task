@@ -4,65 +4,100 @@ import element_actions.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class SignUp {
-    private WebDriver driver;
-    private Element elementActions;
+import java.util.List;
 
-    public SignUp(WebDriver driver) {
+public class RegistrationPage {
+    private final WebDriver driver;
+    private final Element element;
+
+    public RegistrationPage(WebDriver driver) {
         this.driver = driver;
-        elementActions = new Element(driver);
+        element = new Element(driver);
     }
 
-    public void register(String name, String email) {
-        elementActions.type(By.cssSelector("div.signup-form input[name='name']"), name);
-        elementActions.type(By.cssSelector("div.signup-form input[name='email']"), email);
-        elementActions.click(By.cssSelector("div.signup-form button"));
+    public RegistrationPage enterUserId(String userId) {
+        element.type(By.name("userid"), userId);
+        return this;
+
     }
 
-    public void enterTitle(Gender gender) {
+    public RegistrationPage enterUserPassword(String password) {
+        element.type(By.name("passid"), password);
+        return this;
+    }
+
+    public RegistrationPage enterUserName(String username) {
+        element.type(By.name("username"), username);
+        return this;
+    }
+
+    public RegistrationPage enterUserAddress(String address) {
+        element.type(By.name("address"), address);
+        return this;
+    }
+
+    public RegistrationPage selectUserCountry(String country) {
+        element.selectOptionWithVisibleText(By.name("country"), country);
+        return this;
+    }
+
+    public RegistrationPage enterZipCode(String zipCode) {
+        element.type(By.name("zip"), zipCode);
+        return this;
+    }
+
+    public RegistrationPage enterUserEmail(String email) {
+        element.type(By.name("email"), email);
+        return this;
+    }
+
+    public RegistrationPage selectEnglishLanguage() {
+        if (!element.isSelected(By.cssSelector("input[name='languageQuestion']"))) {
+            element.click(By.cssSelector("input[name='languageQuestion']"));
+        }
+        return this;
+    }
+
+    public RegistrationPage deSelectEnglishLanguage() {
+        if (element.getElementAttribute(By.cssSelector("input[name='languageQuestion']"), "checked").equalsIgnoreCase("true")) {
+            element.click(By.cssSelector("input[name='languageQuestion']"));
+        }
+        return this;
+    }
+
+    public RegistrationPage fillAboutSection(String text) {
+        element.type(By.id("desc"), text);
+        return this;
+    }
+
+    public RegistrationPage selectSex(Gender gender) {
         switch (gender) {
             case MALE:
-                elementActions.click(By.id("id_gender1"));
+                element.click(By.cssSelector("input[value='Male']"));
                 break;
             case FEMALE:
-                elementActions.click(By.id("id_gender2"));
+                element.click(By.cssSelector("input[value='Female']"));
                 break;
         }
-
+        return this;
     }
 
-    public void enterName(String name) {
-        elementActions.clear(By.id("name"));
-        elementActions.type(By.id("name"), name);
+    public void clickSubmit() {
+        element.click(By.name("submit"));
     }
 
-    public void enterEmail(String email) {
-        elementActions.clear(By.id("email"));
-        elementActions.type(By.id("email"), email);
+    public boolean isRegistrationFormDisplayed() {
+        return element.isDisplayed(By.name("registration"));
     }
 
-    public void enterPassword(String password) {
-        elementActions.clear(By.id("password"));
-        elementActions.type(By.id("password"), password);
-    }
+    public boolean isUserAbleToProceed() {
+        List<String> errorMessages = List.of("User Id should not be empty / length be between 5 to 12", "Password should not be empty / length be between 7 to 12", "Username must have alphabet characters only", "User address must have alphanumeric characters only", "Select your country from the list", "ZIP code must have numeric characters only", "You have entered an invalid email address!");
 
-    public void selectYear(String year) {
-        elementActions.selectOptionWithVisibleText(By.id("years"), year);
-    }
 
-    public void selectMonth(String month) {
-        elementActions.selectOptionWithVisibleText(By.id("months"), month);
+        boolean value = !errorMessages.contains(element.getAlertText());
+        element.acceptAlert();
+        return value;
     }
-
-    public void selectDay(String day) {
-        elementActions.selectOptionWithVisibleText(By.id("days"), day);
-    }
-
-    public void selectOptionWithText(String text) {
-        elementActions.click(By.xpath(String.format("//label[contains(text(),'%s')]/..//input", text)));
-    }
-
-    //todo add rest of functionalities
 
     public enum Gender {
         MALE, FEMALE

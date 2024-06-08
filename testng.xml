@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Regression" parallel="tests" thread-count="4">
-    <test name="Google Tests">
+<suite name="Cyshield_Automation_Task" parallel="tests" thread-count="4">
+    <test name="ChromeTests">
+        <parameter name="browser" value="chrome"></parameter>
         <classes>
-            <class name="e2e_tests.GoogleTests"></class>
+            <class name="end_2_end_tests.RegistrationPageTests"></class>
         </classes>
     </test>
 
-    <test name="Login Tests">
+    <test name="FirefoxTests">
+        <parameter name="browser" value="chrome"></parameter>
         <classes>
-            <class name="e2e_tests.LoginTests"></class>
+            <class name="end_2_end_tests.RegistrationPageTests"></class>
         </classes>
     </test>
 </suite>

@@ -1,4 +1,4 @@
-package end_2_end_tests;
+package e2e_tests;
 
 import element_actions.Element;
 import base_tests.BaseTests;
